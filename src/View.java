@@ -1,7 +1,5 @@
-import javax.imageio.plugins.tiff.GeoTIFFTagSet;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,109 +13,51 @@ public class View {
     private JPanel centerPanel;
     private JPanel rightPanel;
     private JMenuBar menuBar;
-    private JTree tree;
+    private boolean sidebarFlag;
 
     public View (){
 
         mainFrame = new JFrame();
         mainFrame.setTitle("Insomnia");
         mainFrame.setSize(1100, 560);
-        mainFrame.setSize(1100, 560);
         mainFrame.setLocation(210, 170);
-//        mainFrame.setMinimumSize(new Dimension(380, 350));
+        mainFrame.setMinimumSize(new Dimension(600, 300));
         mainFrame.setResizable(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //------------------------------------------------------------------------------------------------------------
 
 
-        //------------------------------------------------------------------------------------------------------------
-        leftPanel = new JPanel();
-//        leftPanel.setBackground(new Color(30, 30, 30));
+        leftPanel = new LeftPanel();
         JScrollPane leftScrollPane = new JScrollPane(leftPanel);
-        centerPanel = new JPanel(new BorderLayout(5, 10));
-        centerPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-//        centerPanel.setBackground(new Color(30, 30, 30));
+
+        centerPanel = new CenterPanel();
         JScrollPane centerScrollPane = new JScrollPane(centerPanel);
-        rightPanel = new JPanel();
-//        rightPanel.setBackground(new Color(30, 30, 30));
+
+        rightPanel = new RightPanel();
         JScrollPane rightScrollPane = new JScrollPane(rightPanel);
 
         JSplitPane spRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerScrollPane, rightScrollPane);
-        spRight.setDividerLocation(mainFrame.getSize().width / 3);
+        spRight.setDividerLocation(mainFrame.getSize().width * 2 / 5);
         spRight.setDividerSize(3);
-
         mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftScrollPane, spRight);
         mainPane.setDividerSize(2);
-        mainPane.setDividerLocation(mainFrame.getSize().width / 4);
+        mainPane.setDividerLocation(mainFrame.getSize().width / 5);
+        sidebarFlag = true;
+
         mainFrame.add(mainPane, BorderLayout.CENTER);
 
-        //------------------------------------------------------------------------------------------------------------
-        DefaultMutableTreeNode request = new DefaultMutableTreeNode("Request List");
-        tree = new JTree(request);
-//        jt.setBackground(new Color(150,150,150));
-        DefaultMutableTreeNode first = new DefaultMutableTreeNode("first group");
-        DefaultMutableTreeNode second = new DefaultMutableTreeNode("second group");
-        request.add(first);
-        request.add(second);
-        DefaultMutableTreeNode first1 = new DefaultMutableTreeNode("first req");
-        DefaultMutableTreeNode first2 = new DefaultMutableTreeNode("second req");
-        first.add(first1);
-        first.add(first2);
-        DefaultMutableTreeNode second1 = new DefaultMutableTreeNode("first req");
-        second.add(second1);
-        tree.expandRow(0);
-        leftPanel.add(tree);
-        //------------------------------------------------------------------------------------------------------------
 
-        //------------------------------------------------------------------------------------------------------------
-        JPanel northCenter = new JPanel(new BorderLayout(5,5));
-        centerPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        String URLOptions[] = {"PATCH","PUT","POST","DELETE","GET"};
-        JComboBox list = new JComboBox(URLOptions);
-        northCenter.add(list, BorderLayout.WEST);
-        northCenter.add(new JTextField(), BorderLayout.CENTER);
-        northCenter.add(new JButton("Send"), BorderLayout.EAST);
-        centerPanel.add(northCenter, BorderLayout.NORTH);
-        //------------------------------------------------------------------------------------------------------------
 
-        JTabbedPane centerCenter = new JTabbedPane();
-
-//        String bodyOptions[] = {"Form Data","JSON","Binary Data"};
-//        JComboBox boyList = new JComboBox(bodyOptions);
-        centerCenter.add("bodyList", new JPanel());
-
-        JPanel textPanel = new JPanel(new GridLayout(1,2));
-        textPanel.setBorder(new EmptyBorder(5,0,0,0));
-        textPanel.add(new JTextField());
-        textPanel.add(new JTextField());
-        JPanel checkPanel = new JPanel(new GridLayout(1,2));
-        checkPanel.setBorder(new EmptyBorder(5,0,0,0));
-        checkPanel.add(new JCheckBox());
-        checkPanel.add(new Button("*"));
-
-        JPanel keyValuePanel = new JPanel(new BorderLayout(5, 5));
-        keyValuePanel.add(textPanel, BorderLayout.CENTER);
-        keyValuePanel.add(checkPanel, BorderLayout.EAST);
-
-        JPanel boxHeaderPanel = new JPanel();
-        boxHeaderPanel.setLayout(new BoxLayout(boxHeaderPanel, BoxLayout.Y_AXIS));
-        boxHeaderPanel.add(keyValuePanel);
-
-        JPanel headerPanel = new JPanel(new BorderLayout(5,5));
-        headerPanel.add(boxHeaderPanel, BorderLayout.NORTH);
-
-        centerCenter.add("Header", headerPanel);
-        centerCenter.add("Query", new JPanel());
-        centerCenter.add("Auth", new JPanel());
-
-        centerPanel.add(centerCenter, BorderLayout.CENTER);
-
-        //------------------------------------------------------------------------------------------------------------
         menuBar = new JMenuBar();
 
         JMenu appMenu = new JMenu("Application");
         appMenu.setMnemonic('A');
         JMenuItem optionItem = new JMenuItem("Option");
+        optionItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        optionItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                optionFrameMethod();
+            }
+        });
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         exitItem.addActionListener(new ActionListener() {
@@ -129,6 +69,12 @@ public class View {
         JMenu viewMenu = new JMenu("View");
         viewMenu.setMnemonic('V');
         JMenuItem sidebarItem = new JMenuItem("Toggle Sidebar");
+        sidebarItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        sidebarItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                sidebar(leftScrollPane, centerScrollPane, rightScrollPane);
+            }
+        });
         JMenuItem fullScreenItem = new JMenuItem("Toggle Full Screen");
         fullScreenItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
         fullScreenItem.addActionListener(new ActionListener() {
@@ -170,10 +116,69 @@ public class View {
         menuBar.add(viewMenu);
         menuBar.add(helpMenu);
         mainFrame.setJMenuBar(menuBar);
-        //-------------------------------------------------------------------------------
-
     }
 
+    public void sidebar(JScrollPane leftScrollPane, JScrollPane centerScrollPane, JScrollPane rightScrollPane) {
+
+        if (sidebarFlag) {
+            mainPane.setLeftComponent(centerScrollPane);
+            mainPane.setRightComponent(rightScrollPane);
+            mainPane.setDividerSize(2);
+            mainPane.setDividerLocation(mainFrame.getSize().width / 2);
+            sidebarFlag  = false;
+        } else {
+            JSplitPane spRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerScrollPane, rightScrollPane);
+            spRight.setDividerLocation(mainFrame.getSize().width * 2 / 5);
+            spRight.setDividerSize(3);
+            mainPane.setLeftComponent(leftScrollPane);
+            mainPane.setRightComponent(spRight);
+            mainPane.setDividerSize(2);
+            mainPane.setDividerLocation(mainFrame.getSize().width / 5);
+            sidebarFlag  = true;
+        }
+    }
+
+
+    public void optionFrameMethod(){
+
+        JFrame optionFrame = new JFrame();
+        optionFrame.setTitle("Option");
+        optionFrame.setSize(300, 200);
+        optionFrame.setLocation(600, 300);
+        optionFrame.setMinimumSize(new Dimension(250, 170));
+        optionFrame.setResizable(false);
+        optionFrame.setVisible(true);
+
+        JPanel optionPanel = new JPanel();
+        optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
+
+        JPanel followRedirectPanel = new JPanel(new GridLayout(1,2));
+//        JPanel followRedirectPanel = new JPanel(new FlowLayout());
+        followRedirectPanel.setBorder(new EmptyBorder(5,5,5,5));
+        followRedirectPanel.add(new JLabel("follow redirect: "));
+        followRedirectPanel.add(new JCheckBox());
+
+//        JPanel systemTrayPanel = new JPanel(new FlowLayout());
+        JPanel systemTrayPanel = new JPanel(new GridLayout(1,2));
+        systemTrayPanel.setBorder(new EmptyBorder(5,5,5,5));
+        systemTrayPanel.add(new JLabel("System Tray: "));
+        systemTrayPanel.add(new JCheckBox());
+
+//        JPanel themePanel = new JPanel(new FlowLayout());
+        JPanel themePanel = new JPanel(new GridLayout(1,2));
+        themePanel.setBorder(new EmptyBorder(5,5,5,5));
+        themePanel.add(new JLabel("Theme: "));
+        String[] theme = {"light theme", "dark theme"};
+        JComboBox themeCombo = new JComboBox(theme);
+        themePanel.add(themeCombo);
+
+        optionPanel.add(followRedirectPanel);
+        optionPanel.add(systemTrayPanel);
+        optionPanel.add(themePanel);
+
+        optionFrame.add(optionPanel, BorderLayout.NORTH);
+
+    }
 
     /**
      * set the frame visible to show
