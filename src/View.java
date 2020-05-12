@@ -5,6 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+/**
+ * view class in mvc design pattern.
+ * this app contains of three parts.
+ *
+ * @author Mahdi Hejarti 9723100
+ * @since 2020.05.06
+ */
+
 public class View {
 
     private JFrame mainFrame;
@@ -153,18 +161,15 @@ public class View {
         optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
 
         JPanel followRedirectPanel = new JPanel(new GridLayout(1,2));
-//        JPanel followRedirectPanel = new JPanel(new FlowLayout());
         followRedirectPanel.setBorder(new EmptyBorder(5,5,5,5));
         followRedirectPanel.add(new JLabel("follow redirect: "));
         followRedirectPanel.add(new JCheckBox());
 
-//        JPanel systemTrayPanel = new JPanel(new FlowLayout());
         JPanel systemTrayPanel = new JPanel(new GridLayout(1,2));
         systemTrayPanel.setBorder(new EmptyBorder(5,5,5,5));
         systemTrayPanel.add(new JLabel("System Tray: "));
         systemTrayPanel.add(new JCheckBox());
 
-//        JPanel themePanel = new JPanel(new FlowLayout());
         JPanel themePanel = new JPanel(new GridLayout(1,2));
         themePanel.setBorder(new EmptyBorder(5,5,5,5));
         themePanel.add(new JLabel("Theme: "));
