@@ -10,14 +10,16 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
 
-        View view = new View();
-        view.setVisible();
-
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {
-            // Nothing to do ...
+            System.out.println("impossible to change look and feel");
         }
 
+        // load look and feel and theme from saved file
+        View view = new View();
+        int index = view.readComboItem();
+        view.setTheme(index);
+        view.setVisible();
     }
 }

@@ -121,7 +121,7 @@ public class CenterPanel extends JPanel{
 
         JPanel enablePanel = new JPanel(new GridLayout(1,2));
         enablePanel.setBorder(new EmptyBorder(10,2,2,5));
-        enablePanel.add(new JLabel("     ENABLE: "));
+        enablePanel.add(new JLabel("       ENABLE:"));
         enablePanel.add(new JCheckBox());
 
         authPanel.add(tokenPanel);

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="21cd57a6-d6d0-4ccf-9e54-b24ba7845c83" name="Default Changelist" comment="" />
+    <list default="true" id="21cd57a6-d6d0-4ccf-9e54-b24ba7845c83" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/1/META-INF/1.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/1/MyWindow$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/1/MyWindow.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/1/Test$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/1/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/1/solve.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CenterPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CenterPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LeftPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LeftPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +27,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1bZvJ80oMW3YXmnVxaL4XPGKQQe" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -25,7 +40,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Lab/7/Session7_MahdiHejrati_9723100" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../2" />
   </component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -90,6 +105,8 @@
       <workItem from="1589225372877" duration="469000" />
       <workItem from="1589281643172" duration="14934000" />
       <workItem from="1589301918650" duration="7745000" />
+      <workItem from="1589983261139" duration="75000" />
+      <workItem from="1590009745719" duration="203000" />
     </task>
     <servers />
   </component>
@@ -109,26 +126,26 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="531" y="199" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1536.864@0.0.1536.864" timestamp="1589309717358" />
-    <state x="604" y="148" key="FileChooserDialogImpl" timestamp="1589309711891">
+    <state x="604" y="148" key="FileChooserDialogImpl" timestamp="1590009748468">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state x="604" y="148" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1589309711891" />
-    <state width="1493" height="109" key="GridCell.Tab.0.bottom" timestamp="1589309742551">
+    <state x="604" y="148" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1590009748468" />
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom" timestamp="1589983335715">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="109" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1589309742551" />
-    <state width="1493" height="109" key="GridCell.Tab.0.center" timestamp="1589309742551">
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1589983335715" />
+    <state width="1493" height="191" key="GridCell.Tab.0.center" timestamp="1589983335715">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="109" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1589309742551" />
-    <state width="1493" height="109" key="GridCell.Tab.0.left" timestamp="1589309742551">
+    <state width="1493" height="191" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1589983335715" />
+    <state width="1493" height="191" key="GridCell.Tab.0.left" timestamp="1589983335715">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="109" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1589309742551" />
-    <state width="1493" height="109" key="GridCell.Tab.0.right" timestamp="1589309742551">
+    <state width="1493" height="191" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1589983335715" />
+    <state width="1493" height="191" key="GridCell.Tab.0.right" timestamp="1589983335715">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="109" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1589309742551" />
+    <state width="1493" height="191" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1589983335715" />
     <state width="1493" height="109" key="GridCell.Tab.1.bottom" timestamp="1589309742551">
       <screen x="0" y="0" width="1536" height="864" />
     </state>

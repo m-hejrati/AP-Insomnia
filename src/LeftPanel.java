@@ -22,6 +22,9 @@ public class LeftPanel extends JPanel{
 
         DefaultMutableTreeNode request = new DefaultMutableTreeNode("Request List");
         tree = new JTree(request);
+//        tree.setBackground(Color.BLACK);
+//        tree.setForeground(Color.BLACK);
+
         tree.setBorder(new EmptyBorder(10,5,5,5));
         DefaultMutableTreeNode first = new DefaultMutableTreeNode("first group");
         DefaultMutableTreeNode second = new DefaultMutableTreeNode("second group");
@@ -39,12 +42,12 @@ public class LeftPanel extends JPanel{
         DefaultMutableTreeNode third1 = new DefaultMutableTreeNode("first req");
         third.add(third1);
         tree.expandRow(0);
-        tree.setBackground(new Color(238,238,238));
+//        tree.setBackground(new Color(238,238,238));
         this.setLayout(new BorderLayout());
         this.add(tree ,BorderLayout.WEST);
 
         JLabel insomniaLabel = new JLabel("INSOMNIA", SwingConstants.CENTER);
-        Border border = BorderFactory.createLineBorder(new Color(250,250,250), 5);
+        Border border = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 5);
         insomniaLabel.setBorder(border);
         insomniaLabel.setFont (insomniaLabel.getFont ().deriveFont (20f));
         this.add(insomniaLabel, BorderLayout.NORTH);

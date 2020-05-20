@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 /**
  * view class in mvc design pattern.
@@ -23,6 +25,9 @@ public class View {
     private JMenuBar menuBar;
     private boolean sidebarFlag;
 
+    /**
+     * constructor for view class
+     */
     public View (){
 
         mainFrame = new JFrame();
@@ -55,8 +60,10 @@ public class View {
 
 
 
+        // design menu bar
         menuBar = new JMenuBar();
 
+        // add application menu
         JMenu appMenu = new JMenu("Application");
         appMenu.setMnemonic('A');
         JMenuItem optionItem = new JMenuItem("Option");
@@ -74,6 +81,7 @@ public class View {
             }
         });
 
+        // add view menu
         JMenu viewMenu = new JMenu("View");
         viewMenu.setMnemonic('V');
         JMenuItem sidebarItem = new JMenuItem("Toggle Sidebar");
@@ -91,6 +99,7 @@ public class View {
             }
         });
 
+        // add help menu
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic('H');
         JMenuItem aboutItem = new JMenuItem("About");
@@ -126,6 +135,12 @@ public class View {
         mainFrame.setJMenuBar(menuBar);
     }
 
+    /**
+     * this method toggle the sidebar
+     * @param leftScrollPane left panel
+     * @param centerScrollPane center panel
+     * @param rightScrollPane right panel
+     */
     public void sidebar(JScrollPane leftScrollPane, JScrollPane centerScrollPane, JScrollPane rightScrollPane) {
 
         if (sidebarFlag) {
@@ -147,6 +162,9 @@ public class View {
     }
 
 
+    /**
+     * this method show the option frame
+     */
     public void optionFrameMethod(){
 
         JFrame optionFrame = new JFrame();
@@ -176,6 +194,23 @@ public class View {
         String[] theme = {"light theme", "dark theme"};
         JComboBox themeCombo = new JComboBox(theme);
         themePanel.add(themeCombo);
+        int index = readComboItem();
+        try {
+            themeCombo.setSelectedIndex(index);
+        } catch (Exception e){
+            System.err.println("Invalid value in file");
+        }
+        themeCombo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JComboBox combo = (JComboBox) event.getSource();
+                int selected = combo.getSelectedIndex();
+                writeComboItem(selected);
+                setTheme(selected);
+                SwingUtilities.updateComponentTreeUI(mainFrame);
+                SwingUtilities.updateComponentTreeUI(optionFrame);
+            }
+        });
+
 
         optionPanel.add(followRedirectPanel);
         optionPanel.add(systemTrayPanel);
@@ -183,6 +218,66 @@ public class View {
 
         optionFrame.add(optionPanel, BorderLayout.NORTH);
 
+    }
+
+    /**
+     * this method read index of combo box from saved file
+     * @return index of combo box
+     */
+    public int readComboItem(){
+        try (FileReader fileReader = new FileReader("./files/combo.txt")) {
+            return fileReader.read() - 48;
+        } catch (Exception e) {
+            System.err.println("Error in reading file");
+        }
+        return 0;
+    }
+
+    /**
+     * this method save changed index of combo box in the file
+     * @param index index to save
+     */
+    public void writeComboItem(int index){
+        try (FileWriter fileWriter = new FileWriter("./files/combo.txt")) {
+            fileWriter.write(index + 48);
+        } catch (Exception e) {
+            System.err.println("Error in writing file");
+        }
+    }
+
+    /**
+     * set theme between light and dark
+     * @param index index of theme in combo box, 0 light, 1 dark
+     */
+    public void setTheme (int index){
+        switch (index){
+            case 0:
+                try {
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                    UIManager.put( "nimbusLightBackground", new Color( 240, 240, 240) );
+                    UIManager.put( "control", new Color(214,217,223) );
+                    UIManager.put( "nimbusBase", new Color(51,98,140) );
+                    UIManager.put( "nimbusFocus", new Color(115,164,209) );
+                    UIManager.put( "nimbusLightBackground", new Color( 240, 240, 240) );
+                    UIManager.put( "text", new Color( 0,0,0) );
+                } catch (Exception e) {
+                    System.err.println("impossible to change theme");
+                }
+                break;
+            case 1:
+                try {
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                    UIManager.put( "control", new Color( 34, 34, 34) );
+                    UIManager.put( "nimbusBase", new Color( 0, 0, 0) );
+                    UIManager.put( "nimbusFocus", new Color(0,0,0) );
+                    UIManager.put( "nimbusLightBackground", new Color( 44, 44, 44) );
+                    UIManager.put( "nimbusSelectionBackground", new Color( 74, 74, 74) );
+                    UIManager.put( "text", new Color( 255, 255, 255) );
+                } catch (Exception e) {
+                    System.err.println("impossible to change theme");
+                }
+                break;
+        }
     }
 
     /**
