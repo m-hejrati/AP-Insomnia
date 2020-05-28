@@ -22,8 +22,6 @@ public class LeftPanel extends JPanel{
 
         DefaultMutableTreeNode request = new DefaultMutableTreeNode("Request List");
         tree = new JTree(request);
-//        tree.setBackground(Color.BLACK);
-//        tree.setForeground(Color.BLACK);
 
         tree.setBorder(new EmptyBorder(10,5,5,5));
         DefaultMutableTreeNode first = new DefaultMutableTreeNode("first group");

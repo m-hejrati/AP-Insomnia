@@ -77,7 +77,12 @@ public class View {
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                System.exit(0);
+                int index = readTrayItem();
+                if (index == 1) {
+                    mainFrame.setVisible(false);
+                    systemTray();
+                }else
+                    System.exit(0);
             }
         });
 
@@ -186,7 +191,23 @@ public class View {
         JPanel systemTrayPanel = new JPanel(new GridLayout(1,2));
         systemTrayPanel.setBorder(new EmptyBorder(5,5,5,5));
         systemTrayPanel.add(new JLabel("System Tray: "));
-        systemTrayPanel.add(new JCheckBox());
+        JCheckBox trayBox = new JCheckBox();
+        systemTrayPanel.add(trayBox);
+        int trayIndex = readTrayItem();
+        if (trayIndex == 1)
+            trayBox.setSelected(true);
+        else
+            trayBox.setSelected(false);
+        trayBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JCheckBox tray = (JCheckBox) event.getSource();
+                if (tray.isSelected())
+                    writeTrayItem(1);
+                else
+                    writeTrayItem(0);
+            }
+        });
+
 
         JPanel themePanel = new JPanel(new GridLayout(1,2));
         themePanel.setBorder(new EmptyBorder(5,5,5,5));
@@ -277,6 +298,75 @@ public class View {
                     System.err.println("impossible to change theme");
                 }
                 break;
+        }
+    }
+
+    /**
+     * this method read index of tray box from saved file
+     * @return index of combo box
+     */
+    public int readTrayItem(){
+        try (FileReader fileReader = new FileReader("./files/tray.txt")) {
+            return fileReader.read() - 48;
+        } catch (Exception e) {
+            System.err.println("Error in reading file");
+        }
+        return 0;
+    }
+
+    /**
+     * this method save changed index of tray box in the file
+     * @param index index to save
+     */
+    public void writeTrayItem(int index){
+        try (FileWriter fileWriter = new FileWriter("./files/tray.txt")) {
+            fileWriter.write(index + 48);
+        } catch (Exception e) {
+            System.err.println("Error in writing file");
+        }
+    }
+
+    /**
+     * hide app in system tray
+     */
+    public void systemTray(){
+
+        if(SystemTray.isSupported()){
+
+            SystemTray systemTray = SystemTray.getSystemTray();
+            Image image = Toolkit.getDefaultToolkit().getImage("./files/java.png");
+
+            PopupMenu trayPopupMenu = new PopupMenu();
+
+            TrayIcon trayIcon = new TrayIcon(image, "Java MidTerm Project", trayPopupMenu);
+            trayIcon.setImageAutoSize(true);
+
+            try {
+                systemTray.add(trayIcon);
+            } catch (AWTException e) {
+                System.err.println("Impossible to hide in system tray");
+            }
+
+            MenuItem open = new MenuItem("Open");
+            open.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    mainFrame.setVisible(true);
+                    mainFrame.setExtendedState(JFrame.NORMAL);
+                    systemTray.remove(trayIcon);
+                }
+            });
+            trayPopupMenu.add(open);
+
+            MenuItem close = new MenuItem("Close");
+            close.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            });
+            trayPopupMenu.add(close);
+
+        } else {
+            System.out.println("System tray is not supported!");
         }
     }
 
