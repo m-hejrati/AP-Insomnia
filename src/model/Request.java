@@ -19,9 +19,9 @@ public class Request implements Serializable {
         method = "GET"; // default method
         headers = null;
         body = null;
-        bodyMethod = null;
+        bodyMethod = "--data";
         fileLoadAddress = null;
-        responseFileAddress = null;
+        responseFileAddress = "-";
 
     }
 

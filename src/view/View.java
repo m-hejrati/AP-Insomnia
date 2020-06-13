@@ -389,8 +389,8 @@ public class View {
                 + "\n-u <>, --url <> \t : set url \t\t\t\t\t\t\t\t ,[--url http://www.google.com]"
                 + "\n-i   , \t\t\t\t : show response headers"
                 + "\n-M <>, --method <> \t : set method \t\t\t\t\t\t\t ,[--method GET]"
-                + "\n-H <>, --header <> \t : set headers \t\t\t\t\t\t\t ,[--header \"key1:value1&key2:value2\"]"
-                + "\n-d <>, --data <> \t : set message body in form-data \t\t ,[--data \"key1:value1&key2:value2\"]"
+                + "\n-H <>, --header <> \t : set headers \t\t\t\t\t\t\t ,[--header \"key1:value1;key2:value2\"]"
+                + "\n-d <>, --data <> \t : set message body in form-data \t\t ,[--data \"key1=value1&key2=value2\"]"
                 + "\n     , --upload <> \t : set message body with uploaded file \t ,[--upload E:\\MidTermTest\\note.txt]"
                 + "\n-O <>, --output <> \t : save response body in entered file \t ,[--output E:\\MidTermTest\\note.png]" +
                 "\n \t\t\t\t\t   if you not enter file name, it will save in file with default name"

@@ -36,16 +36,24 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
 
     protected void done() {
 
-        rightPanel.setStatusCodeButton(responseInformation.getResponseCode());
-        rightPanel.setStatusMessageButton(responseInformation.getResponseMessage());
-        rightPanel.setTimeButton(responseInformation.getTime() / 1000000 + "ms");
+        try {
 
-        rightPanel.removeHeader();
-        Map<String, List<String>> headers = responseInformation.getHeaders();
-        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-            Object[] data = {entry.getKey(), entry.getValue()};
-            rightPanel.addHeaderTable(data);
+            rightPanel.setStatusCodeButton(responseInformation.getResponseCode());
+            if (responseInformation.getResponseMessage() != null)
+                rightPanel.setStatusMessageButton(responseInformation.getResponseMessage());
+            else
+                rightPanel.setStatusMessageButton("     ");
+            rightPanel.setTimeButton(responseInformation.getTime() / 1000000 + "ms");
+
+            rightPanel.removeHeader();
+            Map<String, List<String>> headers = responseInformation.getHeaders();
+            for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                Object[] data = {entry.getKey(), entry.getValue()};
+                rightPanel.addHeaderTable(data);
+            }
+
+        }catch (Exception e){
+            System.err.println("Error in getting response");;
         }
-
     }
 }

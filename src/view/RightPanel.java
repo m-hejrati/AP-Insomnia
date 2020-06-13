@@ -118,13 +118,9 @@ public class RightPanel extends JPanel{
                 bodyPanel.removeAll();
 
                 JTextArea raw = new JTextArea();
-
-//                JScrollPane scrollBar = new JScrollPane(raw,
-//                        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-//                        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
+                raw.setEditable(false);
                 controller.rawResponse(raw);
-                bodyPanel.add(raw);
+                bodyPanel.add(new JScrollPane(raw));
 
                 repaint();
                 revalidate();
@@ -134,7 +130,7 @@ public class RightPanel extends JPanel{
         previewItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 bodyPanel.removeAll();
-                bodyPanel.add(new JLabel("Preview"));
+                controller.previewResponse(bodyPanel);
                 repaint();
                 revalidate();
             }

@@ -40,7 +40,7 @@ public class MakeRequest {
 
         if (myRequest.getHeaders() != null) {
 
-            String[] headers = myRequest.getHeaders().split("&");
+            String[] headers = myRequest.getHeaders().split(";");
 
             for (String header : headers) {
                 String[] head = header.split(":");
@@ -54,7 +54,7 @@ public class MakeRequest {
         switch (myRequest.getMethod()) {
             case "GET":
             case "DELETE":
-                getResponse(connection, myResponse, myRequest.getResponseFileAddress());
+                getResponse(connection, myResponse, myRequest);
                 break;
 
             case "POST":
@@ -62,26 +62,24 @@ public class MakeRequest {
 
                     if (myRequest.getBodyMethod().equals("--data")) {
                         sendFormData(connection, myRequest.getBody());
-                        getResponse(connection, myResponse, myRequest.getResponseFileAddress());
+                        getResponse(connection, myResponse, myRequest);
 
                     } else if (myRequest.getBodyMethod().equals("--upload")) {
                         sendPOSTUploadBinary(connection, myRequest.getFileLoadAddress());
-                        getResponse(connection, myResponse, myRequest.getResponseFileAddress());
+                        getResponse(connection, myResponse, myRequest);
                     }
                 } else {
                     System.err.println("Please Enter body method");
-                    System.exit(-1);
                 }
                 break;
             case "PUT":
                 if (myRequest.getBodyMethod() != null) {
 
                     sendFormData(connection, myRequest.getBody());
-                    getResponse(connection, myResponse, myRequest.getResponseFileAddress());
+                    getResponse(connection, myResponse, myRequest);
 
                 } else {
                     System.err.println("Please Enter body method");
-                    System.exit(-1);
                 }
                 break;
         }
@@ -96,7 +94,7 @@ public class MakeRequest {
         return myResponse;
     }
 
-    public void getResponse(HttpURLConnection connection, Response myResponse, String responseFileAddress) {
+    public void getResponse(HttpURLConnection connection, Response myResponse, Request myRequest) {
 
         try {
             myResponse.setResponseCode(connection.getResponseCode());
@@ -116,7 +114,10 @@ public class MakeRequest {
             StringBuilder response = new StringBuilder();
 
             OutputStream os = null;
-            if (responseFileAddress != null) {
+            String responseFileAddress = myRequest.getResponseFileAddress();
+
+            System.out.println(responseFileAddress);
+            if (connection.getContentType().equals("image/png")) {
                 if (responseFileAddress.charAt(0) != '-')
                     os = new FileOutputStream(responseFileAddress);
 
@@ -127,6 +128,7 @@ public class MakeRequest {
 
                     String address = "output_" + date;
                     os = new FileOutputStream(address);
+                    myRequest.setResponseFileAddress(address);
                 }
             }
 
@@ -163,7 +165,7 @@ public class MakeRequest {
 
         HashMap<String, String> fooBody = new HashMap<>();
         for (String bod : body) {
-            String[] bo = bod.split(":");
+            String[] bo = bod.split("=");
             fooBody.put(bo[0], bo[1]);
         }
 
