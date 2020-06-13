@@ -46,7 +46,6 @@ public class View {
         mainFrame.setResizable(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
         leftPanel = new LeftPanel(controller);
         JScrollPane leftScrollPane = new JScrollPane(leftPanel);
 
@@ -66,7 +65,6 @@ public class View {
 
         mainFrame.add(mainPane, BorderLayout.CENTER);
 
-
         // design menu bar
         menuBar = new JMenuBar();
 
@@ -80,6 +78,7 @@ public class View {
                 optionFrameMethod();
             }
         });
+
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         exitItem.addActionListener(new ActionListener() {
@@ -103,6 +102,7 @@ public class View {
                 sidebar(leftScrollPane, centerScrollPane, rightScrollPane);
             }
         });
+
         JMenuItem fullScreenItem = new JMenuItem("Toggle Full Screen");
         fullScreenItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
         fullScreenItem.addActionListener(new ActionListener() {
@@ -124,6 +124,7 @@ public class View {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         });
+
         JMenuItem helpItem = new JMenuItem("Help");
         helpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
         helpItem.addActionListener(new ActionListener() {
@@ -162,6 +163,7 @@ public class View {
             mainPane.setDividerSize(2);
             mainPane.setDividerLocation(mainFrame.getSize().width / 2);
             sidebarFlag = false;
+
         } else {
             JSplitPane spRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerScrollPane, rightScrollPane);
             spRight.setDividerLocation(mainFrame.getSize().width * 2 / 5);
@@ -173,7 +175,6 @@ public class View {
             sidebarFlag = true;
         }
     }
-
 
     /**
      * this method show the option frame
@@ -216,7 +217,6 @@ public class View {
             }
         });
 
-
         JPanel themePanel = new JPanel(new GridLayout(1, 2));
         themePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         themePanel.add(new JLabel("Theme: "));
@@ -240,7 +240,6 @@ public class View {
             }
         });
 
-
         optionPanel.add(followRedirectPanel);
         optionPanel.add(systemTrayPanel);
         optionPanel.add(themePanel);
@@ -255,6 +254,7 @@ public class View {
      * @return index of combo box
      */
     public int readComboItem() {
+
         try (FileReader fileReader = new FileReader("./files/combo.txt")) {
             return fileReader.read() - 48;
         } catch (Exception e) {
@@ -269,6 +269,7 @@ public class View {
      * @param index index to save
      */
     public void writeComboItem(int index) {
+
         try (FileWriter fileWriter = new FileWriter("./files/combo.txt")) {
             fileWriter.write(index + 48);
         } catch (Exception e) {
@@ -410,5 +411,13 @@ public class View {
 
     public RightPanel getRightPanel() {
         return rightPanel;
+    }
+
+    public LeftPanel getLeftPanel() {
+        return leftPanel;
+    }
+
+    public CenterPanel getCenterPanel() {
+        return centerPanel;
     }
 }

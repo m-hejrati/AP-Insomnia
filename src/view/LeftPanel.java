@@ -6,7 +6,10 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * in this class we design lef part of the app
@@ -21,16 +24,26 @@ public class LeftPanel extends JPanel{
 
     /**
      * constructor for left panel
-     * @param controller
+     *
+     * @param controller controller object from controller class to set connection between model and view
      */
     public LeftPanel(Controller controller) {
+
+        loadTree(controller);
+    }
+
+    /**
+     * load saved request and group
+     *
+     * @param controller controller object from controller class to set connection between model and view
+     */
+    public void loadTree(Controller controller){
 
         DefaultMutableTreeNode request = new DefaultMutableTreeNode("Request Groups");
         tree = new JTree(request);
 
         tree.setBorder(new EmptyBorder(10,5,5,5));
-
-        String[][] list = controller.loadRequest();
+        String[][] list = controller.loadRequestList();
         DefaultMutableTreeNode newGroup;
 
         for (String[] str : list) {
@@ -43,7 +56,6 @@ public class LeftPanel extends JPanel{
         }
 
         tree.expandRow(0);
-//        tree.setBackground(new Color(238,238,238));
         this.setLayout(new BorderLayout());
         this.add(tree ,BorderLayout.WEST);
 
@@ -52,5 +64,13 @@ public class LeftPanel extends JPanel{
         insomniaLabel.setBorder(border);
         insomniaLabel.setFont (insomniaLabel.getFont ().deriveFont (20f));
         this.add(insomniaLabel, BorderLayout.NORTH);
+
+        tree.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                TreePath path = tree.getPathForLocation(me.getX(), me.getY());
+                if (path != null)
+                    controller.loadRequest(path.toString());
+            }
+        });
     }
 }

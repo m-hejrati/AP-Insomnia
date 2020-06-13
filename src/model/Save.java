@@ -1,14 +1,22 @@
 package model;
 
 import java.io.*;
-import java.nio.FloatBuffer;
+
+/**
+ * this class do all the operation about save; like save, load, list, fire.
+ *
+ * @author Mahdi Hejarti 9723100
+ * @since 2020.05.29
+ */
 
 public class Save {
 
-    public Save(){
-
-    }
-
+    /**
+     * save a request with entered name in entered group.
+     * @param name name of request to save
+     * @param group group of request to save
+     * @param requestInformation information of request
+     */
     public void save(String name, String group, Request requestInformation) {
 
         String path = "requests/" + group;
@@ -28,6 +36,10 @@ public class Save {
             System.err.println("there is no group with this name to save");
     }
 
+    /**
+     * show list of saved group and requests in them
+     * @return group list
+     */
     public String[][] list() {
 
         File[] files = new File("requests").listFiles();
@@ -49,6 +61,11 @@ public class Save {
         return groups;
     }
 
+    /**
+     * read requests from file
+     * @param fileAddress address of file
+     * @return loaded request
+     */
     public Request load(String fileAddress) {
 
         Request requestInformation = new Request();
@@ -66,14 +83,25 @@ public class Save {
         return requestInformation;
     }
 
-    public void createGroup(String str) {
+    /**
+     * create new group for saving request.
+     * @param group name of group
+     */
+    public void createGroup(String group) {
 
-        String path = "requests/" + str;
+        String path = "requests/" + group;
         boolean isSuccessful = new File(path).mkdirs();
         System.out.println("Creating directory is successful: " + isSuccessful);
 
     }
 
+
+    /**
+     * make request from saved information.
+     * @param group name of group
+     * @param name name of saved request
+     * @return request information
+     */
     public Request fire(String group, String name){
 
         Request requestInformation = new Request();

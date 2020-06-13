@@ -10,19 +10,35 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * this class handel making request with swing worker not to freeze the app
+ *
+ * @author Mahdi Hejarti 9723100
+ * @since 2020.06.10
+ */
+
 public class controlMakeRequest extends SwingWorker<Response, Request> {
 
     private Request requestInformation;
     private Response responseInformation;
     private RightPanel rightPanel;
 
+    /**
+     * constructor for class
+     * @param requestInformation information of request
+     * @param rightPanel right panel to show response there
+     */
     public controlMakeRequest(Request requestInformation, RightPanel rightPanel){
 
         this.requestInformation = requestInformation;
         this.rightPanel = rightPanel;
-
     }
 
+    /**
+     * make request in this method not to freeze the app
+     * @return response of our request
+     */
     protected Response doInBackground() {
         MakeRequest makeRequest = new MakeRequest();
         try {
@@ -34,6 +50,9 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
         return responseInformation;
     }
 
+    /**
+     * show response in right panel
+     */
     protected void done() {
 
         try {
@@ -56,4 +75,5 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
             System.err.println("Error in getting response");;
         }
     }
+
 }

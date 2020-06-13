@@ -8,6 +8,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * in this class we design center part of the app
@@ -18,14 +19,19 @@ import java.util.ArrayList;
 
 public class CenterPanel extends JPanel {
 
-    JPanel northCenter; // north part of center panel
-    JTabbedPane centerCenter; // center part of center panel
-    JPanel dataPanel;
+    private JPanel northCenter; // north part of center panel
+    private JTabbedPane centerCenter; // center part of center panel
+    private JTextField URL;
+    private JComboBox list;
+    private JPanel boxHeaderPanel;
+    private ArrayList<JPanel> headersPanelList;
+    private JPanel boxBodyPanel;
+    private ArrayList<JPanel> bodiesPanelList;
 
     /**
      * constructor for Center Panel
      *
-     * @param controller
+     * @param controller controller object from controller class to set connection between model and view
      */
     public CenterPanel(Controller controller) {
 
@@ -35,7 +41,8 @@ public class CenterPanel extends JPanel {
         northCenter = new JPanel(new BorderLayout(5, 5));
         northCenter.setBorder(new EmptyBorder(5, 5, 5, 5));
         String[] URLOptions = {"GET", "POST", "DELETE", "PUT", "PATCH"};
-        JComboBox list = new JComboBox(URLOptions);
+
+        list = new JComboBox(URLOptions);
         list.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JComboBox list = (JComboBox) event.getSource();
@@ -44,17 +51,18 @@ public class CenterPanel extends JPanel {
             }
         });
         northCenter.add(list, BorderLayout.WEST);
-        JTextField URL = new JTextField("https://www.google.com");
+
+        URL = new JTextField("https://www.google.com");
         URL.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                //...
+                // nothing
             }
-
             public void focusLost(FocusEvent event) {
                 controller.setURL(URL.getText());
             }
         });
         northCenter.add(URL, BorderLayout.CENTER);
+
         JPanel buttons = new JPanel(new GridLayout(1, 2, 5, 5));
         JButton send = new JButton("Send");
         send.addActionListener(new ActionListener() {
@@ -67,26 +75,25 @@ public class CenterPanel extends JPanel {
         JButton save = new JButton("Save");
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                saveOptionPane();
-                controller.saveReq();
+                String[] res = saveOptionPane();
+                controller.saveReq(res[0], res[1]);
             }
         });
         buttons.add(save);
+
         northCenter.add(buttons, BorderLayout.EAST);
         this.add(northCenter, BorderLayout.NORTH);
-
 
         centerCenter = new JTabbedPane();
 
         // design and add body panel
-        ArrayList<JPanel> bodiesPanelList = new ArrayList<JPanel>();
+        bodiesPanelList = new ArrayList<JPanel>();
 
         JPanel bodyPanel = new JPanel(new BorderLayout(5, 5));
-
         JPanel buttonPanel3 = new JPanel(new FlowLayout());
         JButton addButton3 = new JButton("Add");
 
-        JPanel boxBodyPanel = new JPanel();
+        boxBodyPanel = new JPanel();
         boxBodyPanel.setLayout(new BoxLayout(boxBodyPanel, BoxLayout.Y_AXIS));
         addButton3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -97,8 +104,8 @@ public class CenterPanel extends JPanel {
                 revalidate();
             }
         });
-
         buttonPanel3.add(addButton3);
+
         JButton setButton3 = new JButton("Set");
         setButton3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -114,6 +121,7 @@ public class CenterPanel extends JPanel {
         JPanel tabComponentPanel = new JPanel();
         tabComponentPanel.add(new JLabel("Body"));
         centerCenter.setTabComponentAt(0, tabComponentPanel);
+
         tabComponentPanel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
@@ -124,16 +132,14 @@ public class CenterPanel extends JPanel {
             }
         });
 
-
         // design and add header panel
-        ArrayList<JPanel> headersPanelList = new ArrayList<JPanel>();
+        headersPanelList = new ArrayList<JPanel>();
 
         JPanel headerPanel = new JPanel(new BorderLayout(5, 5));
-
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton addButton = new JButton("Add");
 
-        JPanel boxHeaderPanel = new JPanel();
+        boxHeaderPanel = new JPanel();
         boxHeaderPanel.setLayout(new BoxLayout(boxHeaderPanel, BoxLayout.Y_AXIS));
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -144,8 +150,8 @@ public class CenterPanel extends JPanel {
                 revalidate();
             }
         });
-
         buttonPanel.add(addButton);
+
         JButton setButton = new JButton("Set");
         setButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -160,8 +166,8 @@ public class CenterPanel extends JPanel {
 
         // design query panel
         ArrayList<JPanel> queriesPanelList = new ArrayList<JPanel>();
-        JPanel queryPanel = new JPanel(new BorderLayout(5, 5));
 
+        JPanel queryPanel = new JPanel(new BorderLayout(5, 5));
         JPanel buttonPanel2 = new JPanel(new FlowLayout());
         JButton addButton2 = new JButton("Add");
 
@@ -169,9 +175,9 @@ public class CenterPanel extends JPanel {
         boxQueryPanel.setLayout(new BoxLayout(boxQueryPanel, BoxLayout.Y_AXIS));
         boxQueryPanel.add(new JLabel("URL PREVIEW:", SwingConstants.LEFT));
         JTextField queryField = new JTextField("https://www.google.com");
-//        queryField.setEditable(false);
         queryField.setBorder(new EmptyBorder(5, 5, 5, 5));
         boxQueryPanel.add(queryField);
+
         addButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 JPanel newPanel = addHeaderField(boxQueryPanel, queriesPanelList);
@@ -182,6 +188,7 @@ public class CenterPanel extends JPanel {
             }
         });
         buttonPanel2.add(addButton2);
+
         JButton setButton2 = new JButton("Set");
         setButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -193,7 +200,6 @@ public class CenterPanel extends JPanel {
         queryPanel.add(buttonPanel2, BorderLayout.CENTER);
         queryPanel.add(boxQueryPanel, BorderLayout.NORTH);
         centerCenter.add("Query", queryPanel);
-
 
         // design auth panel
         JPanel authPanel = new JPanel();
@@ -241,13 +247,7 @@ public class CenterPanel extends JPanel {
         JMenuItem dataItem = new JMenuItem("Form Data");
         dataItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-//                bodyPanel.removeAll();
                 controller.setBodyMethod("--data");
-//                prepareDataPanel(bodyPanel);
-//                bodyPanel.add(dataPanel);
-//                controller
-//                repaint();
-//                revalidate();
             }
         });
 //        JMenuItem jsonItem = new JMenuItem("JSON");
@@ -279,10 +279,10 @@ public class CenterPanel extends JPanel {
     }
 
     /**
-     * this method make key value field and check bpx and button in header tab
+     * this method make key value field and check box and button in header tab
      *
-     * @param boxPanel
-     * @param headersPanelList
+     * @param boxPanel box panel that hold headers panel vertically
+     * @param headersPanelList list of header panel
      * @return created panel
      */
     public JPanel addHeaderField(JPanel boxPanel, ArrayList<JPanel> headersPanelList) {
@@ -291,11 +291,14 @@ public class CenterPanel extends JPanel {
         textPanel.setBorder(new EmptyBorder(5, 0, 0, 0));
         textPanel.add(new JTextField("name"));
         textPanel.add(new JTextField("value"));
+
         JPanel checkPanel = new JPanel(new GridLayout(1, 2));
         checkPanel.setBorder(new EmptyBorder(5, 0, 0, 0));
         checkPanel.add(new JCheckBox());
+
         JButton delButton = new JButton("\u2718");
         checkPanel.add(delButton);
+
         JPanel keyValuePanel = new JPanel(new BorderLayout(5, 5));
         keyValuePanel.add(textPanel, BorderLayout.CENTER);
         keyValuePanel.add(checkPanel, BorderLayout.EAST);
@@ -312,14 +315,21 @@ public class CenterPanel extends JPanel {
         return keyValuePanel;
     }
 
-    public void saveOptionPane() {
+    /**
+     * show an option pane to set name and group
+     * @return entered name and group
+     */
+    public String[] saveOptionPane() {
+
+        String name = "";
+        String group = "";
 
         JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("name:"));
         JTextField nameField = new JTextField(5);
         myPanel.add(nameField);
 
-        myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+        myPanel.add(Box.createHorizontalStrut(15));
 
         myPanel.add(new JLabel("group:"));
         JTextField groupField = new JTextField(5);
@@ -328,9 +338,88 @@ public class CenterPanel extends JPanel {
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Enter name and group to save", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            System.out.println("x value: " + nameField.getText());
-            System.out.println("y value: " + groupField.getText());
-
+            name = nameField.getText();
+            group = groupField.getText();
         }
+
+        return new String[]{name, group};
+    }
+
+    /**
+     * set loaded url in the app
+     * @param url loaded url
+     */
+    public void setURL(String url) {
+        URL.setText(url);
+    }
+
+    /**
+     * set loaded method
+     * @param option choose option
+     */
+    public void setList(String option) {
+        String[] urlOptions = {"GET", "POST", "DELETE", "PUT", "PATCH"};
+        list.setSelectedIndex(Arrays.asList(urlOptions).indexOf(option));
+    }
+
+    /**
+     * this method just remove previous headers to show new ones
+     */
+    public void removePrevious() {
+
+        boxHeaderPanel.removeAll();
+        headersPanelList.removeAll(headersPanelList);
+
+        boxBodyPanel.removeAll();
+        bodiesPanelList.removeAll(bodiesPanelList);
+    }
+
+    /**
+     * show loaded header
+     * @param head header of request
+     */
+    public void setHeader(String[] head){
+
+        JPanel newPanel = addHeaderField(boxHeaderPanel, headersPanelList);
+        boxHeaderPanel.add(newPanel);
+        headersPanelList.add(newPanel);
+
+        setData(head, newPanel);
+    }
+
+    /**
+     * show loaded body
+     * @param bod body of request
+     */
+    public void setBody(String[] bod) {
+
+        JPanel newPanel = addHeaderField(boxBodyPanel, bodiesPanelList);
+        boxBodyPanel.add(newPanel);
+        bodiesPanelList.add(newPanel);
+
+        setData(bod, newPanel);
+    }
+
+    /**
+     * set set common data of header and body
+     * @param data data
+     * @param newPanel new panel
+     */
+    public void setData(String[] data, JPanel newPanel){
+
+        BorderLayout layout = (BorderLayout) newPanel.getLayout();
+        JPanel checkPanel = (JPanel) layout.getLayoutComponent(BorderLayout.EAST);
+        JCheckBox checkBox = (JCheckBox) checkPanel.getComponent(0);
+        checkBox.setSelected(true);
+
+        JPanel textPanel = (JPanel) layout.getLayoutComponent(BorderLayout.CENTER);
+        JTextField key = (JTextField) textPanel.getComponent(0);
+        key.setText(data[0]);
+        JTextField value = (JTextField) textPanel.getComponent(1);
+        value.setText(data[1]);
+
+        updateUI();
+        repaint();
+        revalidate();
     }
 }

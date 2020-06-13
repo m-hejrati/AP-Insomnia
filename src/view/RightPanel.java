@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -22,16 +20,16 @@ import java.awt.event.MouseEvent;
 
 public class RightPanel extends JPanel{
 
-    JTabbedPane centerRight;
-    JPanel northRight;
-    JButton statusCodeButton;
-    JButton statusMessageButton;
-    JButton timeButton;
-    JTable headerTable;
+    private JTabbedPane centerRight;
+    private JPanel northRight;
+    private JButton statusCodeButton;
+    private JButton statusMessageButton;
+    private JButton timeButton;
+    private JTable headerTable;
 
     /**
      * constructor for right panel
-     * @param controller
+     * @param controller controller object from controller class to set connection between model and view
      */
     public RightPanel(Controller controller){
 
@@ -40,11 +38,12 @@ public class RightPanel extends JPanel{
         JPanel northRightButtons = new JPanel();
         statusCodeButton = new JButton("code");
         northRightButtons.add(statusCodeButton);
+
         statusMessageButton = new JButton("message");
         northRightButtons.add(statusMessageButton);
+
         timeButton = new JButton("time");
         northRightButtons.add(timeButton);
-
 
         northRight = new JPanel(new BorderLayout(5, 5));
         northRight.add(northRightButtons, BorderLayout.WEST);
@@ -55,9 +54,7 @@ public class RightPanel extends JPanel{
 
         this.add(northRight, BorderLayout.NORTH);
 
-
         centerRight = new JTabbedPane();
-
         JPanel bodyPanel = new JPanel();
         centerRight.add("Message Body", bodyPanel);
         JPanel tabComponentPanel = new JPanel();
@@ -108,9 +105,10 @@ public class RightPanel extends JPanel{
      * this method show pop up menu when we click on Body tab
      * @param bodyPanel body panel in tab
      * @param e mouse event
-     * @param controller
+     * @param controller controller object from controller class to set connection between model and view
      */
     public void showPopUpMenu(JPanel bodyPanel, MouseEvent e, Controller controller){
+
         JPopupMenu jPopupMenu = new JPopupMenu();
         JMenuItem rawItem = new JMenuItem("Raw");
         rawItem.addActionListener(new ActionListener() {
@@ -126,6 +124,7 @@ public class RightPanel extends JPanel{
                 revalidate();
             }
         });
+
         JMenuItem previewItem = new JMenuItem("Preview");
         previewItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -135,37 +134,52 @@ public class RightPanel extends JPanel{
                 revalidate();
             }
         });
-        JMenuItem jsonItem = new JMenuItem("JSON");
-        jsonItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                bodyPanel.removeAll();
-                bodyPanel.add(new JLabel("JSON"));
-                repaint();
-                revalidate();
-            }
-        });
+
+//        JMenuItem jsonItem = new JMenuItem("JSON");
+//        jsonItem.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent ev) {
+//                bodyPanel.removeAll();
+//                bodyPanel.add(new JLabel("JSON"));
+//                repaint();
+//                revalidate();
+//            }
+//        });
 
         jPopupMenu.add(rawItem);
         jPopupMenu.add(previewItem);
-        jPopupMenu.add(jsonItem);
+//        jPopupMenu.add(jsonItem);
 
         jPopupMenu.setVisible(true);
         jPopupMenu.show(bodyPanel, e.getX(), e.getY());
     }
 
-
+    /**
+     * show status code
+     * @param code status code
+     */
     public void setStatusCodeButton(int code) {
         statusCodeButton.setText(String.valueOf(code));
     }
 
+    /**
+     * show status message
+     * @param message status message
+     */
     public void setStatusMessageButton(String message) {
         statusMessageButton.setText(message);
     }
 
+    /**
+     * show time
+     * @param time time
+     */
     public void setTimeButton(String time) {
         timeButton.setText(time);
     }
 
+    /**
+     * remove headers in panel
+     */
     public void removeHeader(){
 
         DefaultTableModel model = (DefaultTableModel) headerTable.getModel();
@@ -175,11 +189,14 @@ public class RightPanel extends JPanel{
 
     }
 
+    /**
+     * show headers
+     * @param data data
+     */
     public void addHeaderTable(Object[] data) {
 
         DefaultTableModel model = (DefaultTableModel) headerTable.getModel();
         model.addRow(data);
-
     }
 
 }
