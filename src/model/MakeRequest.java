@@ -1,5 +1,6 @@
 package model;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -24,9 +25,10 @@ public class MakeRequest {
      * @param myRequest information of request
      * @return response
      */
-    public Response makeReq(Request myRequest) throws IOException {
+    public Response makeReq(Request myRequest){
 
         long startTime = System.nanoTime();
+        boolean flag = true;
 
         HttpURLConnection connection = null;
         URL url = null;
@@ -35,15 +37,30 @@ public class MakeRequest {
             url = new URL(myRequest.getUrl());
         } catch (Exception e) {
             System.err.println("Invalid url");
+            flag = false;
         }
 
-        try {
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(myRequest.getMethod());
+        if (flag)
+            try {
+                if ("http".equals(url.getProtocol()))
+                    connection = (HttpURLConnection) url.openConnection();
+                else if ("https".equals(url.getProtocol()))
+                    connection = (HttpsURLConnection) url.openConnection();
+                else {
+                    System.err.println("UNSUPPORTED PROTOCOL!");
+                    flag = false;
+                }
+            }catch (Exception e){
+                System.err.println("unable to open connection");
+                flag = false;
+            }
 
-        } catch (IOException e) {
-            System.err.println("Impossible to make connection");
-        }
+        if(flag)
+            try {
+                connection.setRequestMethod(myRequest.getMethod());
+            } catch (IOException e) {
+                System.err.println("Impossible to make connection");
+            }
 
         if (myRequest.getHeaders() != null) {
 
@@ -51,47 +68,50 @@ public class MakeRequest {
 
             for (String header : headers) {
                 String[] head = header.split(":");
-                connection.setRequestProperty(head[0], head[1]);
+                if (head.length == 2)
+                    connection.setRequestProperty(head[0], head[1]);
             }
         }
 
         Response myResponse = new Response();
 
-        switch (myRequest.getMethod()) {
-            case "GET":
-            case "DELETE":
-                getResponse(connection, myResponse, myRequest);
-                break;
+        if (flag)
+            switch (myRequest.getMethod()) {
+                case "GET":
+                case "DELETE":
+                    getResponse(connection, myResponse, myRequest);
+                    break;
 
-            case "POST":
-                if (myRequest.getBodyMethod() != null) {
+                case "POST":
+                    if (myRequest.getBodyMethod() != null) {
 
-                    if (myRequest.getBodyMethod().equals("--data")) {
+                        if (myRequest.getBodyMethod().equals("--data")) {
+                            sendFormData(connection, myRequest.getBody());
+                            getResponse(connection, myResponse, myRequest);
+
+                        } else if (myRequest.getBodyMethod().equals("--upload")) {
+                            sendPOSTUploadBinary(connection, myRequest.getFileLoadAddress());
+                            getResponse(connection, myResponse, myRequest);
+                        }
+                    } else {
+                        System.err.println("Please Enter body method");
+                    }
+                    break;
+
+                case "PUT":
+                    if (myRequest.getBodyMethod() != null) {
+
                         sendFormData(connection, myRequest.getBody());
                         getResponse(connection, myResponse, myRequest);
 
-                    } else if (myRequest.getBodyMethod().equals("--upload")) {
-                        sendPOSTUploadBinary(connection, myRequest.getFileLoadAddress());
-                        getResponse(connection, myResponse, myRequest);
+                    } else {
+                        System.err.println("Please Enter body method");
                     }
-                } else {
-                    System.err.println("Please Enter body method");
-                }
-                break;
+                    break;
+            }
 
-            case "PUT":
-                if (myRequest.getBodyMethod() != null) {
-
-                    sendFormData(connection, myRequest.getBody());
-                    getResponse(connection, myResponse, myRequest);
-
-                } else {
-                    System.err.println("Please Enter body method");
-                }
-                break;
-        }
-
-        System.out.println("Http " + connection.getRequestMethod() + " request sent\n");
+        if (flag)
+            System.out.println("Http " + connection.getRequestMethod() + " request sent\n");
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
@@ -110,8 +130,12 @@ public class MakeRequest {
     public void getResponse(HttpURLConnection connection, Response myResponse, Request myRequest) {
 
         try {
+
             myResponse.setResponseCode(connection.getResponseCode());
-            myResponse.setResponseMessage(connection.getResponseMessage());
+            if(connection.getResponseMessage() != null)
+                myResponse.setResponseMessage(connection.getResponseMessage());
+            else
+                myResponse.setResponseMessage("    ");
 
             Map<String, List<String>> map = connection.getHeaderFields();
             myResponse.setHeaders(map);
@@ -129,9 +153,10 @@ public class MakeRequest {
             OutputStream outputStream = null;
             String responseFileAddress = myRequest.getResponseFileAddress();
 
-            System.out.println(responseFileAddress);
-            if (connection.getContentType() != null)
-                if (connection.getContentType().equals("image/png")) {
+            myResponse.setContentType(connection.getContentType());
+
+            if (myResponse.getContentType() != null)
+                if (myResponse.getContentType().equals("image/png")) {
                     if (responseFileAddress.charAt(0) != '-')
                         outputStream = new FileOutputStream(responseFileAddress);
 

@@ -33,6 +33,7 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
 
         this.requestInformation = requestInformation;
         this.rightPanel = rightPanel;
+        responseInformation = null;
     }
 
     /**
@@ -41,11 +42,8 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
      */
     protected Response doInBackground() {
         MakeRequest makeRequest = new MakeRequest();
-        try {
-            responseInformation = makeRequest.makeReq(requestInformation);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        responseInformation = makeRequest.makeReq(requestInformation);
 
         return responseInformation;
     }
@@ -58,21 +56,23 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
         try {
 
             rightPanel.setStatusCodeButton(responseInformation.getResponseCode());
-            if (responseInformation.getResponseMessage() != null)
-                rightPanel.setStatusMessageButton(responseInformation.getResponseMessage());
-            else
-                rightPanel.setStatusMessageButton("     ");
+            rightPanel.setStatusMessageButton(responseInformation.getResponseMessage());
             rightPanel.setTimeButton(responseInformation.getTime() / 1000000 + "ms");
 
             rightPanel.removeHeader();
-            Map<String, List<String>> headers = responseInformation.getHeaders();
-            for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-                Object[] data = {entry.getKey(), entry.getValue()};
-                rightPanel.addHeaderTable(data);
+
+            if (responseInformation.getHeaders() != null) {
+                Map<String, List<String>> headers = responseInformation.getHeaders();
+                for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                    Object[] data = {entry.getKey(), entry.getValue()};
+                    rightPanel.addHeaderTable(data);
+                }
             }
+
 
         }catch (Exception e){
             System.err.println("Error in getting response");;
+            e.printStackTrace();
         }
     }
 

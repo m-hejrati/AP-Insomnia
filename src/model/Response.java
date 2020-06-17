@@ -17,6 +17,7 @@ public class Response {
     private String body;
     private Map<String, List<String>> headers;
     private long time;
+    private String contentType;
 
 
     /**
@@ -60,6 +61,14 @@ public class Response {
     }
 
     /**
+     * setter for content-type
+     * @param contentType content-type
+     */
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    /**
      * getter for response code
      * @return response code
      */
@@ -99,4 +108,11 @@ public class Response {
         return time;
     }
 
+    /**
+     * getter for content-type
+     * @return content-type
+     */
+    public String getContentType() {
+        return contentType;
+    }
 }

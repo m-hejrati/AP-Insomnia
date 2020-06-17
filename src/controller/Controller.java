@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * controller class set connection between model and view in mvc design pattern
@@ -108,8 +107,6 @@ public class Controller {
 
         controlMakeRequest task = new controlMakeRequest(requestInformation, view.getRightPanel());
         task.execute();
-
-//        try {
         try {
             responseInformation = task.get();
         } catch (Exception e) {
@@ -164,20 +161,18 @@ public class Controller {
      * @param raw body response
      */
     public void rawResponse(JTextArea raw) {
-
         raw.setText(responseInformation.getBody());
     }
 
     /**
      * show picture of response
-     * @param bodyPanel panel to show picture there
+     * @param bodyPanel panel to show response body
      */
     public void previewResponse(JPanel bodyPanel) {
 
-        File file = new File (requestInformation.getResponseFileAddress());
+        if (responseInformation.getContentType().toLowerCase().contains("image/png")) {
 
-        if (file.exists()) {
-
+            File file = new File(requestInformation.getResponseFileAddress());
             BufferedImage myPicture = null;
             try {
                 myPicture = ImageIO.read(file);
@@ -188,7 +183,21 @@ public class Controller {
             JLabel picLabel = new JLabel(new ImageIcon(myPicture));
             bodyPanel.add(picLabel);
 
-        }else
+        } else if (responseInformation.getContentType().toLowerCase().contains("text/html")) {
+
+            JEditorPane jep = new JEditorPane();
+            jep.setEditable(false);
+            try {
+                jep.setPage(requestInformation.getUrl());
+            }catch (IOException e) {
+                jep.setContentType("text/html");
+                jep.setText("<html>Could not load</html>");
+            }
+
+            JScrollPane scrollPane = new JScrollPane(jep);
+            bodyPanel.add(scrollPane);
+
+        } else
             bodyPanel.add(new JLabel("Preview"));
     }
 
@@ -226,7 +235,6 @@ public class Controller {
      * @param bodiesPanelList list of bodies
      */
     public void setBody(ArrayList<JPanel> bodiesPanelList){
-
         String readyHeaders = analyze(bodiesPanelList, "&", "=");
         requestInformation.setBody(readyHeaders);
     }
