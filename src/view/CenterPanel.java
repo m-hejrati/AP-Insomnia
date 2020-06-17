@@ -67,7 +67,7 @@ public class CenterPanel extends JPanel {
         JButton send = new JButton("Send");
         send.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                controller.makeReq();
+                controller.execute();
             }
         });
         buttons.add(send);

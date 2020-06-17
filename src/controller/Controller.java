@@ -1,5 +1,6 @@
 package controller;
 
+import model.MakeRequest;
 import model.Request;
 import model.Response;
 import model.Save;
@@ -18,13 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * controller class set connection between model and view in mvc design pattern
+ * controller class set connection between model and view in mvc design pattern and also make request with swing worker not to freeze the app.
  *
  * @author Mahdi Hejarti 9723100
  * @since 2020.06.10
  */
 
-public class Controller {
+public class Controller extends SwingWorker<Response, Request>{
 
     private View view;
     private Request requestInformation;
@@ -98,21 +99,6 @@ public class Controller {
         view.getLeftPanel().updateUI();
         view.getLeftPanel().repaint();
         view.getLeftPanel().revalidate();
-    }
-
-    /**
-     * make the request with swing work
-     */
-    public void makeReq() {
-
-        controlMakeRequest task = new controlMakeRequest(requestInformation, view.getRightPanel());
-        task.execute();
-        try {
-            responseInformation = task.get();
-        } catch (Exception e) {
-            e.printStackTrace();
-            //            System.err.println("Error in getting response from controlMakeRequest");
-        }
     }
 
     /**
@@ -271,4 +257,42 @@ public class Controller {
         return readyHeaders;
     }
 
+    /**
+     * make request in this method not to freeze the app
+     * @return response of our request
+     */
+    protected Response doInBackground() {
+        MakeRequest makeRequest = new MakeRequest();
+
+        responseInformation = makeRequest.makeReq(requestInformation);
+
+        return responseInformation;
+    }
+
+    /**
+     * show response in right panel
+     */
+    protected void done() {
+
+        try {
+
+            view.getRightPanel().setStatusCodeButton(responseInformation.getResponseCode());
+            view.getRightPanel().setStatusMessageButton(responseInformation.getResponseMessage());
+            view.getRightPanel().setTimeButton(responseInformation.getTime() / 1000000 + "ms");
+
+            view.getRightPanel().removeHeader();
+
+            if (responseInformation.getHeaders() != null) {
+                Map<String, List<String>> headers = responseInformation.getHeaders();
+                for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                    Object[] data = {entry.getKey(), entry.getValue()};
+                    view.getRightPanel().addHeaderTable(data);
+                }
+            }
+
+        }catch (Exception e){
+            System.err.println("Error in getting response");;
+            e.printStackTrace();
+        }
+    }
 }
