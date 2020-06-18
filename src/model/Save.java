@@ -22,6 +22,7 @@ public class Save {
         String path = "requests/" + group;
 
         if (new File(path).exists()) {
+
             try {
                 File file = new File(path + "/" + name);
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
@@ -40,7 +41,7 @@ public class Save {
      * show list of saved group and requests in them
      * @return group list
      */
-    public String[][] list() {
+    public String[][] GUIList() {
 
         File[] files = new File("requests").listFiles();
 
@@ -114,6 +115,42 @@ public class Save {
             System.err.println("there is no group with this name to fire");
 
         return requestInformation;
+    }
+
+    /**
+     * show list of saved group and requests in them
+     * @param group name of group to show its requests
+     */
+    public void consoleList(String group) {
+
+        if (group.charAt(0) != '-') {
+
+            String path = "requests/" + group;
+
+            if (new File(path).exists()) {
+
+                File[] files = new File(path).listFiles();
+                if (files != null) {
+                    Request requestInformation = new Request();
+                    for (int i = 0; i < files.length; i++) {
+                        System.out.print(i + 1 + ". name: " + files[i].getName());
+                        requestInformation = load(path + "/" + files[i].getName());
+                        requestInformation.print();
+                    }
+                }
+
+            } else
+                System.err.println("There is no group with this name to load");
+
+        } else {
+
+            File[] files = new File("requests").listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++)
+                    System.out.println(i + 1 + ". " + files[i].getName());
+            } else
+                System.out.println("there is not any group for requests");
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import model.MakeRequest;
 import model.Request;
 import model.Response;
 import model.Save;
+import view.RightPanel;
 import view.View;
 
 import javax.imageio.ImageIO;
@@ -19,18 +20,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * controller class set connection between model and view in mvc design pattern and also make request with swing worker not to freeze the app.
+ * controller class set connection between model and view in mvc design pattern.
  *
  * @author Mahdi Hejarti 9723100
  * @since 2020.06.10
  */
 
-public class Controller extends SwingWorker<Response, Request>{
+public class Controller {
 
     private View view;
     private Request requestInformation;
     private Response responseInformation;
     private Save save;
+    MakeRequest makeRequest;
 
     public Controller(View view) {
 
@@ -38,19 +40,22 @@ public class Controller extends SwingWorker<Response, Request>{
         requestInformation = new Request();
         responseInformation = new Response();
         save = new Save();
+        makeRequest = new MakeRequest();
 
     }
 
     /**
      * load list of saved requests from file
+     *
      * @return requests list
      */
     public String[][] loadRequestList() {
-        return save.list();
+        return save.GUIList();
     }
 
     /**
      * load information of an specific request from file
+     *
      * @param address name and group
      */
     public void loadRequest(String address) {
@@ -67,29 +72,35 @@ public class Controller extends SwingWorker<Response, Request>{
 
         view.getCenterPanel().removePrevious();
 
-        String[] headers = requestInformation.getHeaders().split(";");
-        for (String header : headers) {
-            String[] head = header.split(":");
-            view.getCenterPanel().setHeader(head);
+        String[] headers = null;
+        if (requestInformation.getHeaders() != null) {
+            headers = requestInformation.getHeaders().split(";");
+            for (String header : headers) {
+                String[] head = header.split(":");
+                view.getCenterPanel().setHeader(head);
+            }
         }
 
-        String[] bodies = requestInformation.getBody().split("&");
-        for (String body : bodies) {
-            String[] bod = body.split("=");
-            view.getCenterPanel().setBody(bod);
+        String[] bodies = null;
+        if (requestInformation.getBody() != null) {
+            bodies = requestInformation.getBody().split("&");
+            for (String body : bodies) {
+                String[] bod = body.split("=");
+                view.getCenterPanel().setBody(bod);
+            }
         }
-
     }
 
     /**
      * save request in file
-     * @param name name of request
+     *
+     * @param name  name of request
      * @param group group of request
      */
     public void saveReq(String name, String group) {
 
         String path = "requests/" + group;
-        if (! new File(path).exists())
+        if (!new File(path).exists())
             save.createGroup(group);
 
         save.save(name, group, requestInformation);
@@ -103,7 +114,8 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * set method of request
-     * @param selected selected method
+     *
+     * @param selected   selected method
      * @param URLOptions all the possible option to choose
      */
     public void setMethod(int selected, String[] URLOptions) {
@@ -112,6 +124,7 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * set url of request
+     *
      * @param url url
      */
     public void setURL(String url) {
@@ -120,6 +133,7 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * set body method
+     *
      * @param bodyMethod body method
      */
     public void setBodyMethod(String bodyMethod) {
@@ -144,6 +158,7 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * show body response
+     *
      * @param raw body response
      */
     public void rawResponse(JTextArea raw) {
@@ -152,11 +167,14 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * show picture of response
+     *
      * @param bodyPanel panel to show response body
      */
     public void previewResponse(JPanel bodyPanel) {
 
-        if (responseInformation.getContentType().toLowerCase().contains("image/png")) {
+        if (responseInformation.getContentType() == null)
+            bodyPanel.add(new JLabel("Preview"));
+        else if (responseInformation.getContentType().toLowerCase().contains("image/png")) {
 
             File file = new File(requestInformation.getResponseFileAddress());
             BufferedImage myPicture = null;
@@ -175,7 +193,7 @@ public class Controller extends SwingWorker<Response, Request>{
             jep.setEditable(false);
             try {
                 jep.setPage(requestInformation.getUrl());
-            }catch (IOException e) {
+            } catch (IOException e) {
                 jep.setContentType("text/html");
                 jep.setText("<html>Could not load</html>");
             }
@@ -189,6 +207,7 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * set address of file to load
+     *
      * @param selectedFile address of file
      */
     public void fileLoadAddress(String selectedFile) {
@@ -197,8 +216,9 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * set queries to send
+     *
      * @param queriesPanelList list of queries
-     * @param queryField query field
+     * @param queryField       query field
      */
     public void setQueries(ArrayList<JPanel> queriesPanelList, JTextField queryField) {
         String readyHeaders = analyze(queriesPanelList, "&", "=");
@@ -209,6 +229,7 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * set request header to send
+     *
      * @param headersPanelList list of headers
      */
     public void setHeaders(ArrayList<JPanel> headersPanelList) {
@@ -218,21 +239,23 @@ public class Controller extends SwingWorker<Response, Request>{
 
     /**
      * set request body in form-data method
+     *
      * @param bodiesPanelList list of bodies
      */
-    public void setBody(ArrayList<JPanel> bodiesPanelList){
+    public void setBody(ArrayList<JPanel> bodiesPanelList) {
         String readyHeaders = analyze(bodiesPanelList, "&", "=");
         requestInformation.setBody(readyHeaders);
     }
 
     /**
      * get panel and set the entered key value of headers
+     *
      * @param panelList list of panels
-     * @param major regex to split two of them
-     * @param minor regex to split key and value
+     * @param major     regex to split two of them
+     * @param minor     regex to split key and value
      * @return ready string to send
      */
-    public String analyze(ArrayList<JPanel> panelList, String major, String minor){
+    public String analyze(ArrayList<JPanel> panelList, String major, String minor) {
 
         String readyHeaders = "";
 
@@ -258,41 +281,35 @@ public class Controller extends SwingWorker<Response, Request>{
     }
 
     /**
-     * make request in this method not to freeze the app
-     * @return response of our request
+     * getter for request information
+     * @return request information
      */
-    protected Response doInBackground() {
-        MakeRequest makeRequest = new MakeRequest();
+    public Request getRequestInfo() {
+        return requestInformation;
+    }
 
-        responseInformation = makeRequest.makeReq(requestInformation);
+    /**
+     * getter for right panel
+     * @return right panel of the view
+     */
+    public RightPanel getRightPanel() {
+        return view.getRightPanel();
+    }
 
+    /**
+     * getter for response information
+     * @return response information
+     */
+    public Response getResponse() {
         return responseInformation;
     }
 
     /**
-     * show response in right panel
+     * setter for response information
+     * @param response response information
      */
-    protected void done() {
-
-        try {
-
-            view.getRightPanel().setStatusCodeButton(responseInformation.getResponseCode());
-            view.getRightPanel().setStatusMessageButton(responseInformation.getResponseMessage());
-            view.getRightPanel().setTimeButton(responseInformation.getTime() / 1000000 + "ms");
-
-            view.getRightPanel().removeHeader();
-
-            if (responseInformation.getHeaders() != null) {
-                Map<String, List<String>> headers = responseInformation.getHeaders();
-                for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-                    Object[] data = {entry.getKey(), entry.getValue()};
-                    view.getRightPanel().addHeaderTable(data);
-                }
-            }
-
-        }catch (Exception e){
-            System.err.println("Error in getting response");;
-            e.printStackTrace();
-        }
+    public void setResponse(Response response){
+        responseInformation = response;
     }
+
 }

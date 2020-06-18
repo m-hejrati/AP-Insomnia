@@ -56,14 +56,15 @@ public class RightPanel extends JPanel{
 
         centerRight = new JTabbedPane();
         JPanel bodyPanel = new JPanel();
-        centerRight.add("Message Body", bodyPanel);
+        JScrollPane bodyScroll = new JScrollPane(bodyPanel);
+        centerRight.add("Message Body", bodyScroll);
         JPanel tabComponentPanel = new JPanel();
         tabComponentPanel.add(new JLabel("Message Body"));
         centerRight.setTabComponentAt(0, tabComponentPanel);
         tabComponentPanel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    centerRight.setSelectedComponent(bodyPanel);
+                    centerRight.setSelectedComponent(bodyScroll);
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     showPopUpMenu(bodyPanel, e, controller);
                 }

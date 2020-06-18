@@ -115,4 +115,19 @@ public class Response {
     public String getContentType() {
         return contentType;
     }
+
+    /**
+     * print response information
+     * @param headerFlag flag to know if show headers or not in response.
+     */
+    public void print(boolean headerFlag) {
+
+        System.out.println("Response Code: \t\t " + responseCode);
+        System.out.println("Response Message: \t " + responseMessage);
+        System.out.println("Body: \t\t " + body);
+        if (headerFlag)
+            System.out.println("Headers: \t " + headers);
+        System.out.println();
+
+    }
 }

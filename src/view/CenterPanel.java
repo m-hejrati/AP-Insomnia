@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import controller.ControlMakeRequest;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 /**
  * in this class we design center part of the app
@@ -67,7 +69,8 @@ public class CenterPanel extends JPanel {
         JButton send = new JButton("Send");
         send.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                controller.execute();
+                ControlMakeRequest controlMakeRequest = new ControlMakeRequest(controller.getRequestInfo(), controller.getRightPanel(), controller);
+                controlMakeRequest.execute();
             }
         });
         buttons.add(send);
@@ -76,7 +79,8 @@ public class CenterPanel extends JPanel {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 String[] res = saveOptionPane();
-                controller.saveReq(res[0], res[1]);
+                if (res[0] != null & res[1] != null)
+                    controller.saveReq(res[0], res[1]);
             }
         });
         buttons.add(save);
@@ -340,6 +344,10 @@ public class CenterPanel extends JPanel {
         if (result == JOptionPane.OK_OPTION) {
             name = nameField.getText();
             group = groupField.getText();
+        }
+        if (result == JOptionPane.CANCEL_OPTION) {
+            name = null;
+            group = null;
         }
 
         return new String[]{name, group};

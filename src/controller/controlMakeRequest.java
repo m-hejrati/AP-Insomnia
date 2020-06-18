@@ -6,7 +6,6 @@ import model.Response;
 import view.RightPanel;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -18,22 +17,25 @@ import java.util.Map;
  * @since 2020.06.10
  */
 
-public class controlMakeRequest extends SwingWorker<Response, Request> {
+public class ControlMakeRequest extends SwingWorker<Response, Request> {
 
     private Request requestInformation;
     private Response responseInformation;
     private RightPanel rightPanel;
+    private Controller controller;
 
     /**
      * constructor for class
      * @param requestInformation information of request
      * @param rightPanel right panel to show response there
+     * @param controller controller to set response
      */
-    public controlMakeRequest(Request requestInformation, RightPanel rightPanel){
+    public ControlMakeRequest(Request requestInformation, RightPanel rightPanel, Controller controller){
 
         this.requestInformation = requestInformation;
         this.rightPanel = rightPanel;
-        responseInformation = null;
+        this.controller = controller;
+
     }
 
     /**
@@ -44,6 +46,7 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
         MakeRequest makeRequest = new MakeRequest();
 
         responseInformation = makeRequest.makeReq(requestInformation);
+        controller.setResponse(responseInformation);
 
         return responseInformation;
     }
@@ -69,11 +72,9 @@ public class controlMakeRequest extends SwingWorker<Response, Request> {
                 }
             }
 
-
         }catch (Exception e){
             System.err.println("Error in getting response");;
             e.printStackTrace();
         }
     }
-
 }

@@ -18,6 +18,7 @@ public class Request implements Serializable {
     private String body;
     private String fileLoadAddress;
     private String responseFileAddress;
+    private boolean showHeaderResponse;
 
     /**
      * constructor of request class
@@ -90,6 +91,14 @@ public class Request implements Serializable {
     }
 
     /**
+     * setter for show header response
+     * @param showHeaderResponse boolean to know if show headers or not in response
+     */
+    public void setShowHeaderResponse(boolean showHeaderResponse) {
+        this.showHeaderResponse = showHeaderResponse;
+    }
+
+    /**
      * getter for url
      * @return url
      */
@@ -143,5 +152,24 @@ public class Request implements Serializable {
      */
     public String getResponseFileAddress() {
         return responseFileAddress;
+    }
+
+    /**
+     * getter for show header response
+     * @return boolean to know if show headers or not in response
+     */
+    public boolean isShowHeaderResponse() {
+        return showHeaderResponse;
+    }
+
+    /**
+     * print saved request information
+     */
+    public void print(){
+        System.out.print(" | url: " + url);
+        System.out.print(" | method: " + method);
+        System.out.print(" | body method: " + bodyMethod);
+        System.out.print(" | body: " + body);
+        System.out.println();
     }
 }

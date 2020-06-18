@@ -53,9 +53,10 @@ public class View {
         JScrollPane centerScrollPane = new JScrollPane(centerPanel);
 
         rightPanel = new RightPanel(controller);
-        JScrollPane rightScrollPane = new JScrollPane(rightPanel);
+//        JScrollPane rightScrollPane = new JScrollPane(rightPanel);
+        rightPanel.setBorder(new EmptyBorder(3,0,0,5));
 
-        JSplitPane spRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerScrollPane, rightScrollPane);
+        JSplitPane spRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerScrollPane, rightPanel);
         spRight.setDividerLocation(mainFrame.getSize().width * 2 / 5);
         spRight.setDividerSize(3);
         mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftScrollPane, spRight);
@@ -99,7 +100,7 @@ public class View {
         sidebarItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         sidebarItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                sidebar(leftScrollPane, centerScrollPane, rightScrollPane);
+                sidebar(leftScrollPane, centerScrollPane, rightPanel);
             }
         });
 
@@ -150,22 +151,21 @@ public class View {
 
     /**
      * this method toggle the sidebar
-     *
-     * @param leftScrollPane   left panel
+     *  @param leftScrollPane   left panel
      * @param centerScrollPane center panel
-     * @param rightScrollPane  right panel
+     * @param rightPanel  right panel
      */
-    public void sidebar(JScrollPane leftScrollPane, JScrollPane centerScrollPane, JScrollPane rightScrollPane) {
+    public void sidebar(JScrollPane leftScrollPane, JScrollPane centerScrollPane, RightPanel rightPanel) {
 
         if (sidebarFlag) {
             mainPane.setLeftComponent(centerScrollPane);
-            mainPane.setRightComponent(rightScrollPane);
+            mainPane.setRightComponent(rightPanel);
             mainPane.setDividerSize(2);
             mainPane.setDividerLocation(mainFrame.getSize().width / 2);
             sidebarFlag = false;
 
         } else {
-            JSplitPane spRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerScrollPane, rightScrollPane);
+            JSplitPane spRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerScrollPane, rightPanel);
             spRight.setDividerLocation(mainFrame.getSize().width * 2 / 5);
             spRight.setDividerSize(3);
             mainPane.setLeftComponent(leftScrollPane);
